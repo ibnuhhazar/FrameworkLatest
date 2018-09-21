@@ -120,19 +120,19 @@ public class StepDefinition extends ObjEvent {
 		swipeUp(driver);
 	}
 
-	@Then(".*?verify.*? \"(.*?)\" is \"(.*?)\"$")
+	@Then(".*?verify, so that \"(.*?)\" is \"(.*?)\"$")
 	public void verifyEqualByContentdesc(String objectName, String text) {
 		logger.debug("verifyEqual Object element " + objectName);
 		verifyEqualByContentDesc(driver, objectName, text); 
 	}
 	
-	@Then(".*?verify by id.*? \"(.*?)\" is \"(.*?)\"$")
-	public void verifyEqualById(String objectName, String text) {
+	@Then(".*?verify, so that id \"(.*?)\" is \"(.*?)\"$")
+	public void verifyEqualById(String objectName, String text) throws InterruptedException {
 		logger.debug("verifyEqual Object element " + objectName);
 		verifyEqualById(driver, objectName, text); 
 	}
 	
-	@Then(".*?verify by xpath.*? \"(.*?)\" is \"(.*?)\"$")
+	@Then(".*?verify, so that xpath \"(.*?)\" is \"(.*?)\"$")
 	public void verifyEqualByXpath(String objectName, String text) {
 		logger.debug("verifyEqual Object element " + objectName);
 		verifyEqualByXpath(driver, objectName, text); 

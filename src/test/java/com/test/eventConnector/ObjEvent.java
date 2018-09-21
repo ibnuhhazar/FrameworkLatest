@@ -78,28 +78,26 @@ public class ObjEvent {
 
 			logger.debug("Open Apps ...............................................");
 
-			desiredCapabilities.setCapability("appWaitActivity", capabilitiesRepo.getProperty("appActivitySUSAN"));
+			desiredCapabilities.setCapability("appWaitActivity", capabilitiesRepo.getProperty("appActivity"));
 
-			desiredCapabilities.setCapability("appPackage", capabilitiesRepo.getProperty("appPackageSUSAN"));
+			desiredCapabilities.setCapability("appPackage", capabilitiesRepo.getProperty("appPackage"));
 
-			desiredCapabilities.setCapability("appActivity", capabilitiesRepo.getProperty("appActivitySUSAN"));
+			desiredCapabilities.setCapability("appActivity", capabilitiesRepo.getProperty("appActivity"));
 
 			desiredCapabilities.setCapability("automationName", "uiautomator2");
 
 			driver = new AndroidDriver(service.getUrl(), desiredCapabilities);
-
-			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-
+			
 			Thread.sleep(5000);
 
 		} else {
 			logger.debug("Open Apps ...............................................");
 
-			desiredCapabilities.setCapability("appWaitActivity", capabilitiesRepo.getProperty("appActivitySUSAN"));
+			desiredCapabilities.setCapability("appWaitActivity", capabilitiesRepo.getProperty("appActivity"));
 
-			desiredCapabilities.setCapability("appPackage", capabilitiesRepo.getProperty("appPackageSUSAN"));
+			desiredCapabilities.setCapability("appPackage", capabilitiesRepo.getProperty("appPackage"));
 
-			desiredCapabilities.setCapability("appActivity", capabilitiesRepo.getProperty("appActivitySUSAN"));
+			desiredCapabilities.setCapability("appActivity", capabilitiesRepo.getProperty("appActivity"));
 		}
 	}
 
@@ -320,8 +318,9 @@ public class ObjEvent {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void verifyEqualById(AndroidDriver driver, String objectName, String text) {
+	public void verifyEqualById(AndroidDriver driver, String objectName, String text) throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(2000);
 		// TODO : Find element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		String getText = driver.findElement(By.id(packageApp + objectName)).getText();

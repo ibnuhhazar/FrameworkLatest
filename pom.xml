@@ -109,9 +109,14 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc14</artifactId>
-			<version>14</version>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>24.0-jre</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -125,21 +130,32 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<!-- The Surefire Plugin is used during the test phase of the build lifecycle 
+				to execute the unit tests of an application.It generates reports in two different 
+				file formats: 1.XML files 2.Plain Text files -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19</version>
 				<configuration>
+					<parallel>classes</parallel>
+					<threadCount>2</threadCount>
 					<includes>
-						<exclude>**/Runner.java</exclude>
+						<include>**/RunAppium*.java</include>
 					</includes>
-					<threadCount>5</threadCount>
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.20</version>
+			</plugin>
+			
+			<!-- ******************maven cucumber HTML reporting plugin *************************** -->
+			<plugin>
 				<groupId>net.masterthought</groupId>
 				<artifactId>maven-cucumber-reporting</artifactId>
-				<version>2.8.0</version>
+				<version>3.16.0</version>
 				<executions>
 					<execution>
 						<id>execution</id>
@@ -148,10 +164,12 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<projectName>cucumber-jvm-example</projectName>
+							<projectName>AutoRunner_Cucumber</projectName>
 							<outputDirectory>result</outputDirectory>
-							<cucumberOutput>cucumber.json</cucumberOutput>
-							<parallelTesting>false</parallelTesting>
+							<cucumberOutput>target/cucumber-parallel/json</cucumberOutput>
+							<skippedFails>true</skippedFails>
+							<enableFlashCharts>false</enableFlashCharts>
+						<!--  	<buildNumber>42</buildNumber> -->
 						</configuration>
 					</execution>
 				</executions>

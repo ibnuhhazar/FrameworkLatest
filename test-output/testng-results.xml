@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="23894" started-at="2018-09-17T09:26:28Z" finished-at="2018-09-17T09:26:52Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="23894" started-at="2018-09-17T09:26:28Z" finished-at="2018-09-17T09:26:52Z">
+      <class name="Lab.RunAppium2">
+        <test-method status="PASS" signature="startServer()[pri:0, instance:Lab.RunAppium2@6e0e048a]" test-instance-name="" name="startServer" is-config="true" duration-ms="18146" started-at="2018-09-17T16:26:28Z" finished-at="2018-09-17T16:26:46Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- startServer -->
+        <test-method status="PASS" signature="startingAppiumServer()[pri:0, instance:Lab.RunAppium2@6e0e048a]" test-instance-name="" name="startingAppiumServer" duration-ms="5012" started-at="2018-09-17T16:26:46Z" finished-at="2018-09-17T16:26:51Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- startingAppiumServer -->
+        <test-method status="PASS" signature="stopServer()[pri:0, instance:Lab.RunAppium2@6e0e048a]" test-instance-name="" name="stopServer" is-config="true" duration-ms="713" started-at="2018-09-17T16:26:51Z" finished-at="2018-09-17T16:26:52Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- stopServer -->
+      </class> <!-- Lab.RunAppium2 -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

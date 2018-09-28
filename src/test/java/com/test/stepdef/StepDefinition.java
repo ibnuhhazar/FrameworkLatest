@@ -36,7 +36,7 @@ public class StepDefinition extends ObjEvent {
 		install();
 	}
 	
-	@Given(".*?loged.*? \"(.*?)\"$")
+	@When(".*?loged.*? \"(.*?)\"$")
 	public void loged(String userID) {
 		logger.debug("tap Object " + userID);
 		logon(driver, userID);
@@ -46,12 +46,6 @@ public class StepDefinition extends ObjEvent {
 	public void tapByContentdesc(String objectName) throws InterruptedException {
 		logger.debug("tap Object " + objectName);
 		tapByContentdesc(driver, objectName);
-	}
-	
-	@When(".*?click button by name \"(.*?)\"$")
-	public void tapByName(String objectName) throws InterruptedException {
-		logger.debug("tap Object " + objectName);
-		tapByName(driver, objectName);
 	}
 	
 	@When(".*?click button by id \"(.*?)\"$")
@@ -72,44 +66,61 @@ public class StepDefinition extends ObjEvent {
 		setTextbyContentdesc(driver, text, objectName);
 	}
 	
-	@When(".*?enter.*? \"(.*?)\" in name \"(.*?)\"$")
-	public void setTextByName(String text, String objectName) throws InterruptedException {
-		logger.debug("setText " + text + " in Object element " + objectName);
-		setTextByName(driver, text, objectName);
-	}
-	
 	@When(".*?enter.*? \"(.*?)\" in id \"(.*?)\"$")
 	public void setTextByID(String text, String objectName) throws InterruptedException {
 		logger.debug("setText " + text + " in Object element " + objectName);
 		setTextByID(driver, text, objectName);
 	}
 	
-
-	@Given(".*?select.*? \"(.*?)\" in \"(.*?)\"$")
-	public void selectListItemBylabel(String text, String objectName) {
+	@When(".*?enter.*? \"(.*?)\" in xpath \"(.*?)\"$")
+	public void setTextByXpath(String text, String objectName) throws InterruptedException {
+		logger.debug("setText " + text + " in Object element " + objectName);
+		setTextByXpath(driver, text, objectName);
+	}
+	
+	@When(".*?select.*? \"(.*?)\" in \"(.*?)\"$")
+	public void selectListItemByContentDesc(String text, String objectName) throws InterruptedException {
 		logger.debug("selectListItemBylabel " + text + " in Object element " + objectName);
-		selectListItemBylabel(driver, text, objectName);
+		selectListItemByContentDesc(driver, text, objectName);
 	}
 
-	@When(".*?check.*? \"(.*?)\"$")
-	public void checkElement(String objectName) {
+	@When(".*?select.*? \"(.*?)\" in id \"(.*?)\"$")
+	public void selectListItemById(String text, String objectName) throws InterruptedException {
+		logger.debug("selectListItemBylabel " + text + " in Object element " + objectName);
+		selectListItemById(driver, text, objectName);
+	}
+	
+	@When(".*?check checkbox \"(.*?)\"$")
+	public void checkElementByContentDesc(String objectName) {
 		logger.debug("checkElement Object element " + objectName);
-		checkElement(driver, objectName);
+		checkElementByContentDesc(driver, objectName);
+	}
+	
+	@When(".*?check checkbox by id \"(.*?)\"$")
+	public void checkElementById(String objectName) {
+		logger.debug("checkElement Object element " + objectName);
+		checkElementById(driver, objectName);
+	}
+	
+	@When(".*?check checkbox xpath \"(.*?)\"$")
+	public void checkElementByXpath(String objectName) {
+		logger.debug("checkElement Object element " + objectName);
+		checkElementByXpath(driver, objectName);
 	}
 
-	@Then(".*? \"([^\"]*)\" .*?display.*?")
+	@Then(".*? \"([^\"]*)\" .*?display")
 	public void verifyElementExistByContentdesc(String objectName) {
 		logger.debug("verifyElementExist Object element " + objectName);
 		verifyElementExistByContentDesc(driver, objectName);
 	}
 	
-	@Then(".*? \"([^\"]*)\" .*?display by Id.*?")
+	@Then(".*? \"([^\"]*)\" .*?display by Id")
 	public void verifyElementExistById(String objectName) {
 		logger.debug("verifyElementExist Object element " + objectName);
 		verifyElementExistByContentDesc(driver, objectName);
 	}
 	
-	@Then(".*? \"([^\"]*)\" .*?display by xpath.*?")
+	@Then(".*? \"([^\"]*)\" .*?display by xpath")
 	public void verifyElementExistByXpath(String objectName) {
 		logger.debug("verifyElementExist Object element " + objectName);
 		verifyElementExistByXpath(driver, objectName);
@@ -118,6 +129,21 @@ public class StepDefinition extends ObjEvent {
 	@When(".*?swipe up.*?")
 	public void swipeup() {
 		swipeUp(driver);
+	}
+	
+	@When(".*?swipe down.*?")
+	public void swipedownElementExist() {
+		swipeDown(driver);
+	}
+	
+	@When(".*?swipe right.*?")
+	public void swiperightElementExist() {
+		swipeRight(driver);
+	}
+	
+	@When(".*?swipe left.*?")
+	public void swipeleftElementExist() {
+		swipeLeft(driver);
 	}
 
 	@Then(".*?verify, so that \"(.*?)\" is \"(.*?)\"$")

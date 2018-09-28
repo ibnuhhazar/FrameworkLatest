@@ -25,7 +25,7 @@ import io.appium.java_client.service.local.AppiumServiceBuilder;
 
 public class ObjEvent {
 
-	//String packageApp = "com.btpn.wow.eform:id/";
+	// String packageApp = "com.btpn.wow.eform:id/";
 	String packageApp = "io.selendroid.testapp:id/";
 	private Properties capabilitiesRepo = null;
 	private Logger logger = Logger.getLogger(ObjEvent.class);
@@ -87,7 +87,7 @@ public class ObjEvent {
 			desiredCapabilities.setCapability("automationName", "uiautomator2");
 
 			driver = new AndroidDriver(service.getUrl(), desiredCapabilities);
-			
+
 			Thread.sleep(5000);
 
 		} else {
@@ -241,16 +241,6 @@ public class ObjEvent {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void setTextByName(AndroidDriver driver, String text, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-		// TODO : Find Element By Name
-		logger.debug("Find Element " + driver.findElement(By.name(objectName)));
-		driver.findElement(By.name(objectName)).sendKeys(text);
-
-	}
-
-	@SuppressWarnings("rawtypes")
 	public void setTextByID(AndroidDriver driver, String text, String objectName) {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
@@ -261,49 +251,57 @@ public class ObjEvent {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void selectListItemBylabel(AndroidDriver driver, String text, String objectName) {
+	public void setTextByXpath(AndroidDriver driver, String text, String objectName) {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-		try {
-			// TODO: Find element by content-desc
-			driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").click();
-
-			switch (text) {
-			case ("6 bulan"):
-				driver.findElementByXPath("//*[@class = 'android.widget.CheckedTextView' and @instance = '0']").click();
-				break;
-			case ("12 bulan"):
-				driver.findElementByXPath("//*[@class = 'android.widget.CheckedTextView' and @instance = '1']").click();
-				break;
-			default:
-				driver.findElementByXPath("//*[@class = 'android.widget.TextView' and @text = '" + text + "']").click();
-			}
-
-		} catch (Exception a) {
-			System.out.println(a);
-		}
+		// TODO : Find Element By Xpath
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void checkElement(AndroidDriver driver, String objectName) {
+	public void selectListItemByContentDesc(AndroidDriver driver, String text, String objectName) throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-		try {
-			// TODO : Find Element by content-desc
-			logger.debug("Find Element "
-					+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
-			driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").click();
-		} catch (Exception a) {
-			try {
-				// TODO : Find Element by name
-				logger.debug("Find Element " + driver.findElement(By.name(objectName)));
-				driver.findElement(By.name(objectName)).click();
-			} catch (Exception b) {
-				// TODO : Find Element by ID
-				logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
-				driver.findElement(By.id(packageApp + objectName)).click();
-			}
-		}
+		// TODO: Find element by content-desc
+		driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").click();
+		Thread.sleep(1000);
+		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + text + "\")").click();		
+		//driver.findElementByXPath("//*[@class = 'android.widget.CheckedTextView' and @text = '" + text + "']").click();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void selectListItemById(AndroidDriver driver, String text, String objectName) throws InterruptedException {
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+		// TODO: Find element by Id
+		driver.findElement(By.id(packageApp + objectName)).click();
+		Thread.sleep(1000);
+		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + text + "\")").click();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void checkElementByContentDesc(AndroidDriver driver, String objectName) {
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+		// TODO : Find Element by content-desc
+		logger.debug("Find Element "
+				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
+		driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").click();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void checkElementById(AndroidDriver driver, String objectName) {
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+		// TODO : Find Element by ID
+		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
+		driver.findElement(By.id(packageApp + objectName)).click();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void checkElementByXpath(AndroidDriver driver, String objectName) {
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+		// TODO : Find Element by xpath
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -331,6 +329,8 @@ public class ObjEvent {
 	@SuppressWarnings("rawtypes")
 	public void verifyEqualByXpath(AndroidDriver driver, String objectName, String text) {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+		// TODO : Find element by Xpath
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -355,6 +355,7 @@ public class ObjEvent {
 	public void verifyElementExistByXpath(AndroidDriver driver, String objectName) {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
+		// TODO : Find Element by Xpath
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -370,6 +371,66 @@ public class ObjEvent {
 		endy = (int) (size.height * 0.20);
 		startx = size.width / 2;
 		driver.swipe(startx, starty, startx, endy, timeduration);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void swipeDown(AndroidDriver driver) {
+		Dimension size;
+		int starty = 0;
+		int endy = 0;
+		int startx = 0;
+		int timeduration = 1000;
+
+		size = driver.manage().window().getSize();
+		System.out.println(size);
+		starty = (int) (size.height * 0.20);
+		System.out.println("starty = " + starty);
+		endy = (int) (size.height * 0.80);
+		System.out.println("endy = " + endy);
+		startx = size.width / 2;
+		System.out.println("startx = " + startx);
+		System.out.println("Start swipe operation");
+		driver.swipe(startx, starty, startx, endy, timeduration);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void swipeRight(AndroidDriver driver) {
+		Dimension size;
+		int starty = 0;
+		int endx = 0;
+		int startx = 0;
+		int timeduration = 1000;
+
+		size = driver.manage().window().getSize();
+		System.out.println(size);
+		startx = (int) (size.width * 0.80);
+		System.out.println("startx = " + startx);
+		endx = (int) (size.width * 0.20);
+		System.out.println("endx = " + endx);
+		starty = size.height / 2;
+		System.out.println("startx = " + startx);
+		System.out.println("Start swipe operation");
+		driver.swipe(startx, starty, endx, starty, timeduration);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void swipeLeft(AndroidDriver driver) {
+		Dimension size;
+		int starty = 0;
+		int endx = 0;
+		int startx = 0;
+		int timeduration = 1000;
+
+		size = driver.manage().window().getSize();
+		System.out.println(size);
+		startx = (int) (size.width * 0.20);
+		System.out.println("starty = " + startx);
+		endx = (int) (size.width * 0.80);
+		System.out.println("endy = " + endx);
+		starty = size.height / 2;
+		System.out.println("startx = " + startx);
+		System.out.println("Start swipe operation");
+		driver.swipe(startx, starty, endx, starty, timeduration);
 	}
 
 	@SuppressWarnings("rawtypes")

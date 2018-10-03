@@ -8,16 +8,17 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.AssertJUnit;
 
 import com.test.otp.OTPTest;
+
+import io.appium.java_client.MobileBy.ByAndroidUIAutomator;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
@@ -34,6 +35,7 @@ public class ObjEvent {
 	private DesiredCapabilities desiredCapabilities;
 	private AppiumDriverLocalService service;
 	private Scanner x;
+	private WebDriverWait wait;
 
 	protected String otp;
 	@SuppressWarnings("rawtypes")
@@ -87,8 +89,6 @@ public class ObjEvent {
 			desiredCapabilities.setCapability("automationName", "uiautomator2");
 
 			driver = new AndroidDriver(service.getUrl(), desiredCapabilities);
-
-			Thread.sleep(5000);
 
 		} else {
 			logger.debug("Open Apps ...............................................");
@@ -149,8 +149,6 @@ public class ObjEvent {
 
 		driver = new AndroidDriver(service.getUrl(), desiredCapabilities);
 
-		Thread.sleep(5000);
-
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -197,8 +195,9 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void tapByContentdesc(AndroidDriver driver, String objectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(ByAndroidUIAutomator.AccessibilityId(objectName)));
+		
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
@@ -207,7 +206,7 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void tapByName(AndroidDriver driver, String objectName) {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
 		// TODO : Find Element by name
 		logger.debug("Find Element " + driver.findElement(By.name(objectName)));
 		driver.findElement(By.name(objectName)).click();
@@ -215,8 +214,9 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void tapById(AndroidDriver driver, String objectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Thread.sleep(3000);
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(packageApp + objectName)));
+
 		// TODO : Find Element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		driver.findElement(By.id(packageApp + objectName)).click();
@@ -224,15 +224,16 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void tapByXpath(AndroidDriver driver, String objectName) {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
 		// TODO : Find Element by Xpath for All Tab
 		driver.findElementByXPath("//*[@class = 'android.widget.TextView' and @text = '" + objectName + "']").click();
 	}
 
 	@SuppressWarnings("rawtypes")
 	public void setTextbyContentdesc(AndroidDriver driver, String text, String objectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(ByAndroidUIAutomator.AccessibilityId(objectName)));
+		
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
@@ -242,8 +243,9 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void setTextByID(AndroidDriver driver, String text, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(packageApp + objectName)));
+		
 		// TODO : Find Element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		driver.findElement(By.id(packageApp + objectName)).sendKeys(text);
@@ -252,36 +254,37 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void setTextByXpath(AndroidDriver driver, String text, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
 		// TODO : Find Element By Xpath
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void selectListItemByContentDesc(AndroidDriver driver, String text, String objectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+	public void selectListItemByContentDesc(AndroidDriver driver, String text, String objectName)
+			throws InterruptedException {
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(ByAndroidUIAutomator.AccessibilityId(objectName)));
+		
 		// TODO: Find element by content-desc
 		driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").click();
 		Thread.sleep(1000);
-		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + text + "\")").click();		
-		//driver.findElementByXPath("//*[@class = 'android.widget.CheckedTextView' and @text = '" + text + "']").click();
+		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + text + "\")").click();
 	}
 
 	@SuppressWarnings("rawtypes")
 	public void selectListItemById(AndroidDriver driver, String text, String objectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
+		
 		// TODO: Find element by Id
 		driver.findElement(By.id(packageApp + objectName)).click();
 		Thread.sleep(1000);
 		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + text + "\")").click();
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public void checkElementByContentDesc(AndroidDriver driver, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(ByAndroidUIAutomator.AccessibilityId(objectName)));
+		
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
@@ -290,8 +293,9 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void checkElementById(AndroidDriver driver, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
+		
 		// TODO : Find Element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		driver.findElement(By.id(packageApp + objectName)).click();
@@ -299,15 +303,14 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void checkElementByXpath(AndroidDriver driver, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
 		// TODO : Find Element by xpath
 	}
 
 	@SuppressWarnings("rawtypes")
 	public void verifyEqualByContentDesc(AndroidDriver driver, String objectName, String text) {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		// TODO : Find Element by content-desc
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(ByAndroidUIAutomator.AccessibilityId(objectName)));
+		
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
 		String getText = driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")")
@@ -317,8 +320,9 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void verifyEqualById(AndroidDriver driver, String objectName, String text) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Thread.sleep(2000);
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
+		
 		// TODO : Find element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		String getText = driver.findElement(By.id(packageApp + objectName)).getText();
@@ -328,14 +332,14 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void verifyEqualByXpath(AndroidDriver driver, String objectName, String text) {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
 		// TODO : Find element by Xpath
 	}
 
 	@SuppressWarnings("rawtypes")
 	public void verifyElementExistByContentDesc(AndroidDriver driver, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(ByAndroidUIAutomator.AccessibilityId(objectName)));
+		
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
@@ -344,8 +348,9 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void verifyElementExistById(AndroidDriver driver, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
+		
 		// TODO : Find Element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		driver.findElement(By.id(packageApp + objectName)).isDisplayed();
@@ -353,8 +358,6 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void verifyElementExistByXpath(AndroidDriver driver, String objectName) {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
 		// TODO : Find Element by Xpath
 	}
 
@@ -446,315 +449,6 @@ public class ObjEvent {
 		endy = (int) (size.height * 0.20);
 		startx = size.width / 1;
 		driver.swipe(startx, starty, startx, endy, timeduration);
-	}
-
-	public int calculatePointMultiplication(String objectName, int multiplier) {
-		return Integer.parseInt(
-				driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").getText())
-				* multiplier;
-	}
-
-	@SuppressWarnings("rawtypes")
-	public void calculatePoint(AndroidDriver driver, String text, String objectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-		// "text" --> u/ menampung agentClass
-		// "objectName" --> u/ mengambil nilai yang diinputkan oleh user
-		// LANGKAH-LANGKAH :
-		// 1. menentukan agentClass
-		// 2. ambil nilai yang ditampung dalam variabel "ambilCashout" --> perhitungan
-		// dari frontEnd
-		// 3. hitung nilai yang akan ditampung dalam variabel "hitungCashout" -->
-		// perhitungan sesuai dgn rumus
-		// 4. bandingkan nilai "ambilCashout" dgn "hitungCashout"
-
-		int ambilCashout = 0, ambilCustomer = 0, ambilAquisition = 0, ambilBFI = 0, ambilTransaction50 = 0;
-		int ambilSusanLogin = 0, ambilWeselHP = 0, ambilBankTransfer = 0, ambilOTC = 0;
-
-		int hitungBFI = 0, hitungTransaction50 = 0, hitungSusanLogin = 0;
-		int hitungBankTransfer = 0, hitungOTC = 0;
-
-		int hitungSpecial = 0;
-		// variabel khusus yg u/ menampung nilai yang akan diinputkan user pada label :
-		// cashout, customer, aquisition, weselHP
-
-		switch (objectName) {
-		case ("calpoint_est_cashout"):
-			ambilCashout = Integer.parseInt(driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_cashout\")").getText());
-			System.out.println("ambilCashout = " + ambilCashout);
-
-		case ("calpoint_est_customer"):
-			ambilCustomer = Integer.parseInt(driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_customer\")").getText());
-			System.out.println("ambilCustomer = " + ambilCustomer);
-
-		case ("calpoint_est_acquisition"):
-			ambilAquisition = Integer.parseInt(
-					driver.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_acquisition\")")
-							.getText());
-			System.out.println("ambilAquisition = " + ambilAquisition);
-
-		case ("calpoint_est_weselHP"):
-			ambilWeselHP = Integer.parseInt(driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_weselhp\")").getText());
-			System.out.println("ambilWeselHP = " + ambilWeselHP);
-
-			switch (text) {
-			case ("Star"):
-				hitungSpecial = calculatePointMultiplication(objectName, 3);
-				System.out.println(objectName + " = " + hitungSpecial);
-				break;
-			case ("Gold"):
-				hitungSpecial = calculatePointMultiplication(objectName, 2);
-				System.out.println(objectName + " = " + hitungSpecial);
-				break;
-			case ("Silver"):
-			case ("Bronze"):
-				hitungSpecial = calculatePointMultiplication(objectName, 1);
-				System.out.println(objectName + " = " + hitungSpecial);
-				break;
-			case ("Stone"):
-				hitungSpecial = calculatePointMultiplication(objectName, 0);
-				System.out.println(objectName + " = " + hitungSpecial);
-				break;
-			}
-			break;
-
-		case ("calpoint_est_bfi"):
-			ambilBFI = Integer.parseInt(
-					driver.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_bfi\")").getText());
-			System.out.println("ambilBFI = " + ambilBFI);
-
-			switch (text) {
-			case ("Star"):
-				hitungBFI = calculatePointMultiplication(objectName, 50);
-				System.out.println("hitungBFI = " + hitungBFI);
-				break;
-			case ("Gold"):
-				hitungBFI = calculatePointMultiplication(objectName, 25);
-				System.out.println("hitungBFI = " + hitungBFI);
-				break;
-			case ("Silver"):
-			case ("Bronze"):
-				hitungBFI = calculatePointMultiplication(objectName, 10);
-				System.out.println("hitungBFI = " + hitungBFI);
-				break;
-			case ("Stone"):
-				hitungBFI = calculatePointMultiplication(objectName, 0);
-				System.out.println("hitungBFI = " + hitungBFI);
-				break;
-			}
-			break;
-
-		case ("calpoint_est_transaction50"):
-			ambilTransaction50 = Integer.parseInt(
-					driver.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_transaction50\")")
-							.getText());
-			System.out.println("ambilTransaction50 = " + ambilTransaction50);
-			hitungTransaction50 = Integer.parseInt(driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").getText());
-			switch (text) {
-			case ("Star"):
-				if (hitungTransaction50 < 50) {
-					hitungTransaction50 = 0;
-				} else if (hitungTransaction50 >= 50) {
-					hitungTransaction50 = 10;
-				}
-				System.out.println("hitungTransaction50 = " + hitungTransaction50);
-				break;
-			case ("Gold"):
-				if (hitungTransaction50 < 50) {
-					hitungTransaction50 = 0;
-				} else if (hitungTransaction50 >= 50) {
-					hitungTransaction50 = 7;
-				}
-				System.out.println("hitungTransaction50 = " + hitungTransaction50);
-				break;
-			case ("Silver"):
-			case ("Bronze"):
-				if (hitungTransaction50 < 50) {
-					hitungTransaction50 = 0;
-				} else if (hitungTransaction50 >= 50) {
-					hitungTransaction50 = 5;
-				}
-				System.out.println("hitungTransaction50 = " + hitungTransaction50);
-				break;
-			case ("Stone"):
-				hitungTransaction50 = 0;
-				System.out.println("hitungTransaction50 = " + hitungTransaction50);
-				break;
-			}
-			break;
-
-		case ("calpoint_est_susanlogin"):
-			ambilSusanLogin = Integer.parseInt(
-					driver.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_susanlogin\")")
-							.getText());
-			System.out.println("ambilSusanLogin = " + ambilSusanLogin);
-			hitungSusanLogin = Integer.parseInt(driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").getText());
-			switch (text) {
-			case ("Star"):
-			case ("Gold"):
-			case ("Silver"):
-			case ("Bronze"):
-				if (hitungSusanLogin >= 1) {
-					hitungSusanLogin = 3;
-				} else if (hitungSusanLogin < 1) {
-					hitungSusanLogin = 0;
-				}
-				System.out.println("hitungSusanLogin = " + hitungSusanLogin);
-				break;
-			case ("Stone"):
-				hitungSusanLogin = 0;
-				System.out.println("hitungSusanLogin = " + hitungSusanLogin);
-				break;
-			}
-			break;
-
-		case ("calpoint_est_banktransfer"):
-			ambilBankTransfer = Integer.parseInt(
-					driver.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_banktransfer\")")
-							.getText());
-			System.out.println("ambilBankTransfer = " + ambilBankTransfer);
-			hitungBankTransfer = Integer.parseInt(driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").getText());
-			switch (text) {
-			case ("Star"):
-			case ("Gold"):
-			case ("Silver"):
-			case ("Bronze"):
-				if (hitungBankTransfer < 2) {
-					hitungBankTransfer = 0;
-				} else if (hitungBankTransfer == 2) {
-					hitungBankTransfer = 52;
-				} else if (hitungBankTransfer == 3) {
-					hitungBankTransfer = 78;
-				} else if (hitungBankTransfer == 4) {
-					hitungBankTransfer = 104;
-				} else if (hitungBankTransfer >= 5) {
-					hitungBankTransfer = 130;
-				}
-				System.out.println("hitungBankTransfer = " + hitungBankTransfer);
-				break;
-			case ("Stone"):
-				hitungBankTransfer = 0;
-				System.out.println("hitungBankTransfer = " + hitungBankTransfer);
-				break;
-			}
-			break;
-
-		case ("calpoint_est_otc"):
-			ambilOTC = Integer.parseInt(
-					driver.findElementByAndroidUIAutomator("UiSelector().description(\"calpoint_val_otc\")").getText());
-			System.out.println("ambilOTC = " + ambilOTC);
-			hitungOTC = Integer.parseInt(driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").getText());
-			switch (text) {
-			case ("Star"):
-			case ("Gold"):
-			case ("Silver"):
-			case ("Bronze"):
-				hitungOTC = (Integer.parseInt(driver
-						.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").getText()))
-						* 1;
-				System.out.println("hitungOTC = " + hitungOTC);
-				break;
-			case ("Stone"):
-				hitungOTC = (Integer.parseInt(driver
-						.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").getText()))
-						* 0;
-				System.out.println("hitungOTC = " + hitungOTC);
-				break;
-			}
-			break;
-		}
-	}
-
-	@SuppressWarnings("rawtypes")
-	public void totalPoint(AndroidDriver driver, String objectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-		int ambilCashout = Integer.parseInt(
-				driver.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_cashout\")").getText());
-		int ambilCustomer = Integer.parseInt(
-				driver.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_customer\")").getText());
-		int ambilAquisition = Integer.parseInt(driver
-				.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_acquisition\")").getText());
-
-		swipeUp(driver);
-
-		int ambilBFI = Integer.parseInt(
-				driver.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_bfi\")").getText());
-		int ambilTransaction50 = Integer.parseInt(driver
-				.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_transaction50\")").getText());
-		int ambilSusanLogin = Integer.parseInt(driver
-				.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_susanlogin\")").getText());
-		int ambilWeselHP = Integer.parseInt(
-				driver.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_weselhp\")").getText());
-		int ambilBankTransfer = Integer.parseInt(driver
-				.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_banktransfer\")").getText());
-		int ambilOTC = Integer.parseInt(
-				driver.findElementByAndroidUIAutomator("UiSelector().description(\"viewcal_val_otc\")").getText());
-
-		int ambilTotalPoin = Integer.parseInt(
-				driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").getText());
-		int hitungTotalPoin = ambilCashout + ambilCustomer + ambilAquisition + ambilBFI + ambilTransaction50
-				+ ambilSusanLogin + ambilWeselHP + ambilBankTransfer + ambilOTC;
-
-		System.out.println("ambilTotalPoin = " + ambilTotalPoin);
-		System.out.println("hitungTotalPoin = " + hitungTotalPoin);
-
-	}
-
-	@SuppressWarnings("rawtypes")
-	public void choose(AndroidDriver driver, String objectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-		switch (objectName) {
-		case ("rekening"):
-
-			String eMoneyBalance = driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"card_txt_emoneybalance\")").getText();
-			Pattern pa = Pattern.compile("[([0-9]+)]");
-			Matcher ma = pa.matcher(eMoneyBalance);
-			String resultMoneyBalance = "";
-			while (ma.find())
-				resultMoneyBalance += ma.group();
-			int resultMBalance = Integer.parseInt(resultMoneyBalance);
-
-			String eMoneyThreshold = driver
-					.findElementByAndroidUIAutomator("UiSelector().description(\"UiSelectorcard_txt_emoneythreshold\")")
-					.getText();
-			Pattern pb = Pattern.compile("[([0-9]+)]");
-			Matcher mb = pb.matcher(eMoneyThreshold);
-			String resultMoneyThreshold = "";
-			while (mb.find())
-				resultMoneyThreshold += mb.group();
-			int resultMThreshold = Integer.parseInt(resultMoneyThreshold);
-
-			int batasSaldoDekatMin = 0;
-			batasSaldoDekatMin = (int) Math.round(resultMBalance / 1.2);
-			// batasSaldoDekatMin += 1;
-
-			if (resultMBalance < resultMThreshold) {
-				try {
-					// TODO: Find element by content-desc
-					driver.findElementByAndroidUIAutomator("UiSelector().description(\"card_btn_liquidity\")").click();
-					driver.findElementByAndroidUIAutomator("UiSelector().description(\"button1\")").click();
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-			} else if (resultMThreshold > batasSaldoDekatMin && resultMThreshold <= resultMBalance) {
-				// click button
-			}
-			break;
-		case ("tunai"):
-
-			break;
-
-		}
 	}
 
 	public void inputOTP() throws InterruptedException {

@@ -162,26 +162,7 @@ public class StepDefinition extends ObjEvent {
 	public void verifyEqualByXpath(String objectName, String text) {
 		logger.debug("verifyEqual Object element " + objectName);
 		verifyEqualByXpath(driver, objectName, text); 
-	}
-	
-	@Then(".*?calculate.*? as \"(.*?)\" in \"(.*?)\"$")
-	public void calculatePoint(String text, String objectName) throws InterruptedException {
-		logger.debug("calculatePoint " + text + " in Object element " + objectName);
-		calculatePoint(driver, text, objectName);
-	}
-	
-	@Then(".*?view total point.*? is \"(.*?)\"$")
-	public void totalPoint(String objectName) throws InterruptedException {
-		logger.debug("totalPoint in Object element " + objectName);
-		totalPoint(driver, objectName);
-	}
-	
-	@When(".*?choose.*? \"(.*?)\"$")
-	public void choose(String objectName) throws InterruptedException {
-		logger.debug("choose Object element " + objectName);
-		/*input/change method below*/
-		choose(driver, objectName);
-	}
+	}	
 	
 	@When(".*?i enter as otp.*?")
 	public void enterOTP() throws InterruptedException {

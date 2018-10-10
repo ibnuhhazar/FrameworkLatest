@@ -46,8 +46,9 @@ public class ObjEvent {
 	public ObjEvent() throws IOException {
 		// TODO Auto-generated constructor stub
 		capabilitiesRepo = new Properties();
+		File properFile = new File(System.getProperty("user.dir"), "/src/test/java/com/test/config/Capabilities.properties");
 		FileInputStream fsCapabilities = new FileInputStream(
-				System.getProperty("user.dir") + "\\src\\test\\java\\com\\test\\config\\Capabilities.properties");
+				properFile);
 		capabilitiesRepo.load(fsCapabilities);
 
 	}
@@ -57,9 +58,15 @@ public class ObjEvent {
 
 		if (driver == null) {
 
-			System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
+			//for MAC
+			System.setProperty(AppiumServiceBuilder.NODE_PATH, "/usr/local/bin/node.sh");
 			System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
-					"C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
+					"//usr/local/lib/node_modules/appium/build/lib/main.js");
+			
+			//for Windows
+//			System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
+//			System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
+//					"C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
 
 			service = AppiumDriverLocalService
 					.buildService(new AppiumServiceBuilder().usingAnyFreePort().withIPAddress("127.0.0.1"));
@@ -105,20 +112,26 @@ public class ObjEvent {
 	public void install() throws IOException, InterruptedException {
 		desiredCapabilities = new DesiredCapabilities();
 
-		System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
+		//for MAC
+		System.setProperty(AppiumServiceBuilder.NODE_PATH, "/usr/local/bin/node.sh");
 		System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
-				"C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
+				"//usr/local/lib/node_modules/appium/build/lib/main.js");
+		//for Windows
+//		System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
+//		System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
+//				"C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
 
 		service = AppiumDriverLocalService
 				.buildService(new AppiumServiceBuilder().usingAnyFreePort().withIPAddress("127.0.0.1"));
 		service.start();
 
 		capabilitiesRepo = new Properties();
+		File properFile = new File(System.getProperty("user.dir"), "/src/test/java/com/test/config/Capabilities.properties");
 		FileInputStream fsCapabilities = new FileInputStream(
-				System.getProperty("user.dir") + "\\src\\test\\java\\com\\test\\config\\Capabilities.properties");
+				properFile);
 		capabilitiesRepo.load(fsCapabilities);
 
-		File sourceDir = new File(capabilitiesRepo.getProperty("APK_PATH"));
+		File sourceDir = new File(System.getProperty("user.dir"), capabilitiesRepo.getProperty("APK_PATH"));
 
 		String[] apkFilenames = sourceDir.list(new FilenameFilter() {
 			@Override

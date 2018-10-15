@@ -60,8 +60,8 @@ public class ObjEvent {
 		if (driver == null) {
 
 			System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
-			System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
-					"C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
+			System.setProperty(AppiumServiceBuilder.APPIUM_PATH,System.getProperty("user.dir")+
+					"\\node_modules\\appium\\build\\lib\\main.js");
 
 			service = AppiumDriverLocalService
 					.buildService(new AppiumServiceBuilder().usingAnyFreePort().withIPAddress("127.0.0.1"));

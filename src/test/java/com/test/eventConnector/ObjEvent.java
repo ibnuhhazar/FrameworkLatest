@@ -60,7 +60,7 @@ public class ObjEvent {
 		if (driver == null) {
 
 			System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
-			System.setProperty(AppiumServiceBuilder.APPIUM_PATH,System.getProperty("user.home")+
+			System.setProperty(AppiumServiceBuilder.APPIUM_PATH,System.getenv("userprofile")+
 					"\\node_modules\\appium\\build\\lib\\main.js");
 
 			service = AppiumDriverLocalService
@@ -106,7 +106,7 @@ public class ObjEvent {
 		desiredCapabilities = new DesiredCapabilities();
 
 		System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
-		System.setProperty(AppiumServiceBuilder.APPIUM_PATH,System.getProperty("user.home")+
+		System.setProperty(AppiumServiceBuilder.APPIUM_PATH,System.getenv("userprofile")+
 				"\\node_modules\\appium\\build\\lib\\main.js");
 
 		service = AppiumDriverLocalService

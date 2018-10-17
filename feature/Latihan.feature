@@ -12,4 +12,5 @@ Feature: Registration
     And i select as programming language "Java" in id "input_preferedProgrammingLanguage"
     And i check checkbox by id "input_adds"
     And i click button by id "btnRegisterUser"
-    Then i verify, so that id "label_preferedProgrammingLanguage_data" is "Java"
+    Then i verify, so that id "label_preferedProgrammingLanguage_data" is "Javaa"
+    And i screenshot for verify the screen

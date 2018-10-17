@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,6 +20,7 @@ import org.testng.AssertJUnit;
 
 import com.test.otp.OTPTest;
 
+import cucumber.api.Scenario;
 import io.appium.java_client.MobileBy.ByAndroidUIAutomator;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
@@ -48,9 +51,9 @@ public class ObjEvent {
 	public ObjEvent() throws IOException {
 		// TODO Auto-generated constructor stub
 		capabilitiesRepo = new Properties();
-		File properFile = new File(System.getProperty("user.dir"), "/src/test/java/com/test/config/Capabilities.properties");
-		FileInputStream fsCapabilities = new FileInputStream(
-				properFile);
+		File properFile = new File(System.getProperty("user.dir"),
+				"/src/test/java/com/test/config/Capabilities.properties");
+		FileInputStream fsCapabilities = new FileInputStream(properFile);
 		capabilitiesRepo.load(fsCapabilities);
 
 	}
@@ -60,15 +63,16 @@ public class ObjEvent {
 
 		if (driver == null) {
 
-			//for MAC
+			// for MAC
 			System.setProperty(AppiumServiceBuilder.NODE_PATH, "/usr/local/bin/node.sh");
 			System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
 					"//usr/local/lib/node_modules/appium/build/lib/main.js");
-			
-			//for Windows
-//			System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
-//			System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
-//					"C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
+
+			// for Windows
+			// System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program
+			// Files\\nodejs\\node.exe");
+			// System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
+			// "C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
 
 			service = AppiumDriverLocalService
 					.buildService(new AppiumServiceBuilder().usingAnyFreePort().withIPAddress("127.0.0.1"));
@@ -112,23 +116,23 @@ public class ObjEvent {
 	public void install() throws IOException, InterruptedException {
 		desiredCapabilities = new DesiredCapabilities();
 
-		//for MAC
+		// for MAC
 		System.setProperty(AppiumServiceBuilder.NODE_PATH, "/usr/local/bin/node.sh");
-		System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
-				"//usr/local/lib/node_modules/appium/build/lib/main.js");
-		//for Windows
-//		System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program Files\\nodejs\\node.exe");
-//		System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
-//				"C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
+		System.setProperty(AppiumServiceBuilder.APPIUM_PATH, "//usr/local/lib/node_modules/appium/build/lib/main.js");
+		// for Windows
+		// System.setProperty(AppiumServiceBuilder.NODE_PATH, "C:\\Program
+		// Files\\nodejs\\node.exe");
+		// System.setProperty(AppiumServiceBuilder.APPIUM_PATH,
+		// "C:\\Users\\17053682\\node_modules\\appium\\build\\lib\\main.js");
 
 		service = AppiumDriverLocalService
 				.buildService(new AppiumServiceBuilder().usingAnyFreePort().withIPAddress("127.0.0.1"));
 		service.start();
 
 		capabilitiesRepo = new Properties();
-		File properFile = new File(System.getProperty("user.dir"), "/src/test/java/com/test/config/Capabilities.properties");
-		FileInputStream fsCapabilities = new FileInputStream(
-				properFile);
+		File properFile = new File(System.getProperty("user.dir"),
+				"/src/test/java/com/test/config/Capabilities.properties");
+		FileInputStream fsCapabilities = new FileInputStream(properFile);
 		capabilitiesRepo.load(fsCapabilities);
 
 		File sourceDir = new File(System.getProperty("user.dir"), capabilitiesRepo.getProperty("APK_PATH"));
@@ -210,7 +214,7 @@ public class ObjEvent {
 	public void tapByContentdesc(AndroidDriver driver, String objectName) throws InterruptedException {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(ByAndroidUIAutomator.AccessibilityId(objectName)));
-		
+
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
@@ -219,7 +223,7 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void tapByName(AndroidDriver driver, String objectName) {
-		
+
 		// TODO : Find Element by name
 		logger.debug("Find Element " + driver.findElement(By.name(objectName)));
 		driver.findElement(By.name(objectName)).click();
@@ -237,7 +241,7 @@ public class ObjEvent {
 
 	@SuppressWarnings("rawtypes")
 	public void tapByXpath(AndroidDriver driver, String objectName) {
-		
+
 		// TODO : Find Element by Xpath for All Tab
 		driver.findElementByXPath("//*[@class = 'android.widget.TextView' and @text = '" + objectName + "']").click();
 	}
@@ -246,7 +250,7 @@ public class ObjEvent {
 	public void setTextbyContentdesc(AndroidDriver driver, String text, String objectName) throws InterruptedException {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(ByAndroidUIAutomator.AccessibilityId(objectName)));
-		
+
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
@@ -258,7 +262,7 @@ public class ObjEvent {
 	public void setTextByID(AndroidDriver driver, String text, String objectName) {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(packageApp + objectName)));
-		
+
 		// TODO : Find Element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		driver.findElement(By.id(packageApp + objectName)).sendKeys(text);
@@ -275,7 +279,7 @@ public class ObjEvent {
 			throws InterruptedException {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(ByAndroidUIAutomator.AccessibilityId(objectName)));
-		
+
 		// TODO: Find element by content-desc
 		driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").click();
 		Thread.sleep(1000);
@@ -286,7 +290,7 @@ public class ObjEvent {
 	public void selectListItemById(AndroidDriver driver, String text, String objectName) throws InterruptedException {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
-		
+
 		// TODO: Find element by Id
 		driver.findElement(By.id(packageApp + objectName)).click();
 		Thread.sleep(1000);
@@ -297,7 +301,7 @@ public class ObjEvent {
 	public void checkElementByContentDesc(AndroidDriver driver, String objectName) {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(ByAndroidUIAutomator.AccessibilityId(objectName)));
-		
+
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
@@ -308,7 +312,7 @@ public class ObjEvent {
 	public void checkElementById(AndroidDriver driver, String objectName) {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
-		
+
 		// TODO : Find Element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		driver.findElement(By.id(packageApp + objectName)).click();
@@ -323,7 +327,7 @@ public class ObjEvent {
 	public void verifyEqualByContentDesc(AndroidDriver driver, String objectName, String text) {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(ByAndroidUIAutomator.AccessibilityId(objectName)));
-		
+
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
 		String getText = driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")")
@@ -335,7 +339,7 @@ public class ObjEvent {
 	public void verifyEqualById(AndroidDriver driver, String objectName, String text) throws InterruptedException {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
-		
+
 		// TODO : Find element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		String getText = driver.findElement(By.id(packageApp + objectName)).getText();
@@ -352,7 +356,7 @@ public class ObjEvent {
 	public void verifyElementExistByContentDesc(AndroidDriver driver, String objectName) {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(ByAndroidUIAutomator.AccessibilityId(objectName)));
-		
+
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
@@ -363,7 +367,7 @@ public class ObjEvent {
 	public void verifyElementExistById(AndroidDriver driver, String objectName) {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
-		
+
 		// TODO : Find Element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
 		driver.findElement(By.id(packageApp + objectName)).isDisplayed();
@@ -492,5 +496,11 @@ public class ObjEvent {
 					.sendKeys(String.valueOf(ary[5]));
 
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void screenShot(AndroidDriver driver, Scenario myScenario) {
+		System.out.println("This is Scenario" + myScenario);
+		myScenario.embed(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES), "image/png");
 	}
 }

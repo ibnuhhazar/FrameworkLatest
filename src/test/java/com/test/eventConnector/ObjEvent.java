@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
@@ -23,16 +24,18 @@ import org.testng.AssertJUnit;
 import com.test.otp.OTPTest;
 
 import cucumber.api.Scenario;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.MobileBy.ByAndroidUIAutomator;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 
 public class ObjEvent {
 
-	// String packageApp = "com.btpn.wow.eform:id/";
-	String packageApp = "io.selendroid.testapp:id/";
 	private Properties capabilitiesRepo = null;
 	private Logger logger = Logger.getLogger(ObjEvent.class);
 	private OTPTest otpt = new OTPTest();
@@ -101,7 +104,19 @@ public class ObjEvent {
 
 			desiredCapabilities.setCapability("appActivity", capabilitiesRepo.getProperty("appActivity"));
 
-			desiredCapabilities.setCapability("automationName", "uiautomator2");
+			// Version Android to use UiAutomator2
+			int Versi = Integer.parseInt(capabilitiesRepo.getProperty("1platformVersion"));
+
+			if (Versi >= 7 ) {	
+				// Automation for Android 7.0.0 ++
+				desiredCapabilities.setCapability("automationName", "uiautomator2");
+
+			} else{
+
+				// Platform version
+				desiredCapabilities.setCapability("platformVersion", capabilitiesRepo.getProperty("1platformVersion"));
+
+			}
 
 			driver = new AndroidDriver(service.getUrl(), desiredCapabilities);
 
@@ -163,7 +178,19 @@ public class ObjEvent {
 		// install Apps
 		desiredCapabilities.setCapability(MobileCapabilityType.APP, apkFilepath);
 
-		desiredCapabilities.setCapability("automationName", "uiautomator2");
+		// Version Android to use UiAutomator2
+		int Versi = Integer.parseInt(capabilitiesRepo.getProperty("1platformVersion"));
+
+		if (Versi >= 7 ) {	
+			// Automation for Android 7.0.0 ++
+			desiredCapabilities.setCapability("automationName", "uiautomator2");
+
+		} else{
+
+			// Platform version
+			desiredCapabilities.setCapability("platformVersion", capabilitiesRepo.getProperty("1platformVersion"));
+
+		}
 
 		driver = new AndroidDriver(service.getUrl(), desiredCapabilities);
 
@@ -195,12 +222,12 @@ public class ObjEvent {
 				logger.debug("Find Element " + driver
 						.findElementByAndroidUIAutomator("UiSelector().description(\"item_inputtxt_mobilenumber\")"));
 				driver.findElementByAndroidUIAutomator("UiSelector().description(\"item_inputtxt_mobilenumber\")")
-						.sendKeys(username);
+				.sendKeys(username);
 
 				logger.debug("Find Element "
 						+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"item_inputtxt_pin\")"));
 				driver.findElementByAndroidUIAutomator("UiSelector().description(\"item_inputtxt_pin\")")
-						.sendKeys(password.trim());
+				.sendKeys(password.trim());
 
 			} else {
 				System.out.println("Record Not Found: ");
@@ -229,15 +256,23 @@ public class ObjEvent {
 		logger.debug("Find Element " + driver.findElement(By.name(objectName)));
 		driver.findElement(By.name(objectName)).click();
 	}
+	
+	@SuppressWarnings("rawtypes")
+	public void tapByText(AndroidDriver driver, String objectName, int timeLimitInSeconds) {
+
+		waitForText(driver, timeLimitInSeconds, objectName, false);
+		logger.debug("Find Element " + driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")"));
+		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")").click();
+	}
 
 	@SuppressWarnings("rawtypes")
 	public void tapById(AndroidDriver driver, String objectName) throws InterruptedException {
 		wait = new WebDriverWait(driver, 20);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(packageApp + objectName)));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(objectName)));
 
 		// TODO : Find Element by ID
-		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
-		driver.findElement(By.id(packageApp + objectName)).click();
+		logger.debug("Find Element " + driver.findElement(By.id(objectName)));
+		driver.findElement(By.id(objectName)).click();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -262,11 +297,11 @@ public class ObjEvent {
 	@SuppressWarnings("rawtypes")
 	public void setTextByID(AndroidDriver driver, String text, String objectName) {
 		wait = new WebDriverWait(driver, 20);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(packageApp + objectName)));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(objectName)));
 
 		// TODO : Find Element by ID
-		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
-		driver.findElement(By.id(packageApp + objectName)).sendKeys(text);
+		logger.debug("Find Element " + driver.findElement(By.id(objectName)));
+		driver.findElement(By.id(objectName)).sendKeys(text);
 
 	}
 
@@ -290,10 +325,10 @@ public class ObjEvent {
 	@SuppressWarnings("rawtypes")
 	public void selectListItemById(AndroidDriver driver, String text, String objectName) throws InterruptedException {
 		wait = new WebDriverWait(driver, 20);
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(objectName)));
 
 		// TODO: Find element by Id
-		driver.findElement(By.id(packageApp + objectName)).click();
+		driver.findElement(By.id(objectName)).click();
 		Thread.sleep(1000);
 		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + text + "\")").click();
 	}
@@ -312,11 +347,11 @@ public class ObjEvent {
 	@SuppressWarnings("rawtypes")
 	public void checkElementById(AndroidDriver driver, String objectName) {
 		wait = new WebDriverWait(driver, 20);
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(objectName)));
 
 		// TODO : Find Element by ID
-		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
-		driver.findElement(By.id(packageApp + objectName)).click();
+		logger.debug("Find Element " + driver.findElement(By.id(objectName)));
+		driver.findElement(By.id(objectName)).click();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -339,11 +374,11 @@ public class ObjEvent {
 	@SuppressWarnings("rawtypes")
 	public void verifyEqualById(AndroidDriver driver, String objectName, String text) throws InterruptedException {
 		wait = new WebDriverWait(driver, 20);
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(objectName)));
 
 		// TODO : Find element by ID
-		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
-		String getText = driver.findElement(By.id(packageApp + objectName)).getText();
+		logger.debug("Find Element " + driver.findElement(By.id(objectName)));
+		String getText = driver.findElement(By.id(objectName)).getText();
 		AssertJUnit.assertEquals(text, getText);
 
 	}
@@ -367,11 +402,29 @@ public class ObjEvent {
 	@SuppressWarnings("rawtypes")
 	public void verifyElementExistById(AndroidDriver driver, String objectName) {
 		wait = new WebDriverWait(driver, 20);
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(packageApp + objectName)));
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(objectName)));
 
 		// TODO : Find Element by ID
-		logger.debug("Find Element " + driver.findElement(By.id(packageApp + objectName)));
-		driver.findElement(By.id(packageApp + objectName)).isDisplayed();
+		logger.debug("Find Element " + driver.findElement(By.id(objectName)));
+		driver.findElement(By.id(objectName)).isDisplayed();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void verifyElementExistByText(AndroidDriver driver, Scenario myScenario, String objectName, int timeLimitInSeconds) {
+
+		waitForText(driver, timeLimitInSeconds, objectName, false);
+		logger.debug("Find Element " + driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")"));
+		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")").isDisplayed();
+		screenShot(driver, myScenario);
+
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void verifyElementDisableById(AndroidDriver driver, Scenario myScenario, String objectName, int timeLimitInSeconds) throws IOException {
+		waitForContent(driver, timeLimitInSeconds, objectName, false);
+		logger.debug("Find Element " + driver.findElement(By.id(objectName)));
+		boolean button=driver.findElement(By.id(objectName)).isEnabled();
+		AssertJUnit.assertEquals(false, button);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -379,101 +432,99 @@ public class ObjEvent {
 		// TODO : Find Element by Xpath
 	}
 
-	@SuppressWarnings("rawtypes")
-	public void swipeUp(AndroidDriver driver) {
-		Dimension size;
-		int starty = 0;
-		int endy = 0;
-		int startx = 0;
-		int timeduration = 1000;
+	// Swipe Up
+		@SuppressWarnings("rawtypes")
+		public static void swipeDown(AndroidDriver driver) {
+			Dimension size;
+			int start = 0;
+			int end = 0;
+			int anchor = 0;
+			int timeduration = 2;
 
-		size = driver.manage().window().getSize();
-		starty = (int) (size.height * 0.80);
-		endy = (int) (size.height * 0.20);
-		startx = size.width / 2;
-		driver.swipe(startx, starty, startx, endy, timeduration);
-	}
+			size = driver.manage().window().getSize();
+			end = (int) (size.height * 0.80);
+			start = (int) (size.height * 0.20);
+			anchor = size.width / 2;
 
-	@SuppressWarnings("rawtypes")
-	public void swipeDown(AndroidDriver driver) {
-		Dimension size;
-		int starty = 0;
-		int endy = 0;
-		int startx = 0;
-		int timeduration = 1000;
+			new TouchAction(driver)
+			.press(PointOption.point(anchor, start))
+			.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
+			.moveTo(PointOption.point(anchor, end))
+			.release().perform();
 
-		size = driver.manage().window().getSize();
-		System.out.println(size);
-		starty = (int) (size.height * 0.20);
-		System.out.println("starty = " + starty);
-		endy = (int) (size.height * 0.80);
-		System.out.println("endy = " + endy);
-		startx = size.width / 2;
-		System.out.println("startx = " + startx);
-		System.out.println("Start swipe operation");
-		driver.swipe(startx, starty, startx, endy, timeduration);
-	}
+		}
 
-	@SuppressWarnings("rawtypes")
-	public void swipeRight(AndroidDriver driver) {
-		Dimension size;
-		int starty = 0;
-		int endx = 0;
-		int startx = 0;
-		int timeduration = 1000;
+		// Swipe Down
+		@SuppressWarnings("rawtypes")
+		public void swipeUp(AndroidDriver driver) {
+			Dimension size;
+			int start = 0;
+			int end = 0;
+			int anchor = 0;
+			int timeduration = 2;
 
-		size = driver.manage().window().getSize();
-		System.out.println(size);
-		startx = (int) (size.width * 0.80);
-		System.out.println("startx = " + startx);
-		endx = (int) (size.width * 0.20);
-		System.out.println("endx = " + endx);
-		starty = size.height / 2;
-		System.out.println("startx = " + startx);
-		System.out.println("Start swipe operation");
-		driver.swipe(startx, starty, endx, starty, timeduration);
-	}
+			size = driver.manage().window().getSize();
+			System.out.println(size);
+			end = (int) (size.height * 0.20);
+			start = (int) (size.height * 0.80);
+			anchor = size.width / 2;
 
-	@SuppressWarnings("rawtypes")
-	public void swipeLeft(AndroidDriver driver) {
-		Dimension size;
-		int starty = 0;
-		int endx = 0;
-		int startx = 0;
-		int timeduration = 1000;
+			new TouchAction(driver)
+			.press(PointOption.point(anchor, start))
+			.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
+			.moveTo(PointOption.point(anchor, end))
+			.release().perform();
+		}
 
-		size = driver.manage().window().getSize();
-		System.out.println(size);
-		startx = (int) (size.width * 0.20);
-		System.out.println("starty = " + startx);
-		endx = (int) (size.width * 0.80);
-		System.out.println("endy = " + endx);
-		starty = size.height / 2;
-		System.out.println("startx = " + startx);
-		System.out.println("Start swipe operation");
-		driver.swipe(startx, starty, endx, starty, timeduration);
-	}
+		// Swipe Right
+		@SuppressWarnings("rawtypes")
+		public void swipeLeft(AndroidDriver driver) {
+			Dimension size;
+			int anchor = 0;
+			int end = 0;
+			int start = 0;
+			int timeduration = 2;
 
-	@SuppressWarnings("rawtypes")
-	public void swipeUp2(AndroidDriver driver) {
-		Dimension size;
-		int starty = 0;
-		int endy = 0;
-		int startx = 0;
-		int timeduration = 1000;
+			size = driver.manage().window().getSize();
+			System.out.println(size);
+			start = (int) (size.width * 0.80);
+			end = (int) (size.width * 0.20);
+			anchor = size.height / 2;
 
-		size = driver.manage().window().getSize();
-		starty = (int) (size.height * 0.40);
-		endy = (int) (size.height * 0.20);
-		startx = size.width / 1;
-		driver.swipe(startx, starty, startx, endy, timeduration);
-	}
+			new TouchAction(driver)
+			.press(PointOption.point(start, anchor))
+			.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
+			.moveTo(PointOption.point(end, anchor))
+			.release().perform();
+		}
+
+		// Swipe Left
+		@SuppressWarnings("rawtypes")
+		public void swipeRight(AndroidDriver driver) {
+			Dimension size;
+			int anchor = 0;
+			int end = 0;
+			int start = 0;
+			int timeduration = 2;
+
+			size = driver.manage().window().getSize();
+			System.out.println(size);
+			start = (int) (size.width * 0.20);
+			end = (int) (size.width * 0.80);
+			anchor = size.height / 2;
+
+			new TouchAction(driver)
+			.press(PointOption.point(start, anchor))
+			.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
+			.moveTo(PointOption.point(end, anchor))
+			.release().perform();
+		}
 
 	public void inputOTP() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		Thread.sleep(5000);
 		try {
-			driver.findElement(By.id(packageApp + "message")).isDisplayed();
+			driver.findElement(By.id("message")).isDisplayed();
 			System.out.println("Button1 Is Display");
 		} catch (Exception a) {
 
@@ -484,17 +535,86 @@ public class ObjEvent {
 			int[] ary = Arrays.stream(otpt.getOtp().split("")).mapToInt(Integer::parseInt).toArray();
 
 			driver.findElementByXPath("//*[@index = '0' and @content-desc ='item_inputtxt_otp']")
-					.sendKeys(String.valueOf(ary[0]));
+			.sendKeys(String.valueOf(ary[0]));
 			driver.findElementByXPath("//*[@index = '1' and @content-desc ='item_inputtxt_otp']")
-					.sendKeys(String.valueOf(ary[1]));
+			.sendKeys(String.valueOf(ary[1]));
 			driver.findElementByXPath("//*[@index = '2' and @content-desc ='item_inputtxt_otp']")
-					.sendKeys(String.valueOf(ary[2]));
+			.sendKeys(String.valueOf(ary[2]));
 			driver.findElementByXPath("//*[@index = '3' and @content-desc ='item_inputtxt_otp']")
-					.sendKeys(String.valueOf(ary[3]));
+			.sendKeys(String.valueOf(ary[3]));
 			driver.findElementByXPath("//*[@index = '4' and @content-desc ='item_inputtxt_otp']")
-					.sendKeys(String.valueOf(ary[4]));
+			.sendKeys(String.valueOf(ary[4]));
 			driver.findElementByXPath("//*[@index = '5' and @content-desc ='item_inputtxt_otp']")
-					.sendKeys(String.valueOf(ary[5]));
+			.sendKeys(String.valueOf(ary[5]));
+
+		}
+	}
+
+	// Wait for element for Id
+	@SuppressWarnings("rawtypes")
+	public static boolean waitForId(AndroidDriver driver, int timeLimitInSeconds, String objectName, boolean isElementPresent){
+
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, timeLimitInSeconds);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(objectName)));
+			isElementPresent = driver.findElement(By.id(objectName)).isDisplayed();
+			return isElementPresent;	
+		}catch(Exception e){
+			isElementPresent = false;
+			System.out.println(e.getMessage());
+			return isElementPresent;
+		} 
+
+	}
+
+	// Wait for element content-desc
+	@SuppressWarnings("rawtypes")
+	public static boolean waitForContent(AndroidDriver driver, int timeLimitInSeconds, String objectName, boolean isElementPresent){
+
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, timeLimitInSeconds);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(MobileBy.AndroidUIAutomator("UiSelector().description(\""+ objectName +"\"));")));
+			isElementPresent = driver.findElement(MobileBy.AndroidUIAutomator("UiSelector().description(\""+ objectName +"\"));")).isDisplayed();
+			return isElementPresent;	
+		}catch(Exception e){
+			isElementPresent = false;
+			System.out.println(e.getMessage());
+			return isElementPresent;
+		} 
+
+	}
+
+	// Wait for element by text
+	@SuppressWarnings("rawtypes")
+	public static boolean waitForText(AndroidDriver driver, int timeLimitInSeconds, String objectName, boolean isElementPresent){
+
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, timeLimitInSeconds);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(MobileBy.AndroidUIAutomator("UiSelector().text(\""+ objectName +"\");")));
+			isElementPresent = driver.findElement(MobileBy.AndroidUIAutomator("UiSelector().text(\""+ objectName +"\"));")).isDisplayed();
+			return isElementPresent;	
+		}catch(Exception e){
+			isElementPresent = false;
+			System.out.println(e.getMessage());
+			return isElementPresent;
+
+		}
+
+	}
+
+	// Wait for element by index
+	@SuppressWarnings("rawtypes")
+	public static boolean waitForIndex(AndroidDriver driver, int timeLimitInSeconds, String objectName, boolean isElementPresent){
+
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, timeLimitInSeconds);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(MobileBy.xpath("//android.widget.*?[@index='"+objectName+"']")));
+			isElementPresent = driver.findElement(MobileBy.xpath("//android.widget.*?[@index='"+objectName+"']")).isDisplayed();
+			return isElementPresent;	
+		}catch(Exception e){
+			isElementPresent = false;
+			System.out.println(e.getMessage());
+			return isElementPresent;
 
 		}
 	}
@@ -503,5 +623,21 @@ public class ObjEvent {
 	public void screenShot(AndroidDriver driver, Scenario myScenario) {
 		System.out.println("This is Scenario" + myScenario);
 		myScenario.embed(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES), "image/png");
+	}
+
+	//Swipe to Element by Text
+	@SuppressWarnings("rawtypes")
+	public void swipeToEleText(AndroidDriver driver, String objectName) {
+
+		logger.debug(driver);
+		driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView("+ "new UiSelector().text(\""+objectName+"\"));").isDisplayed();		
+	}
+
+	//Swipe to Element by Id
+	@SuppressWarnings("rawtypes")
+	public void swipeToEleId(AndroidDriver driver, String objectName) {
+
+		logger.debug(driver);
+		driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView("+ "new UiSelector().resourceId(\".*?id/"+objectName+"\"));").isDisplayed();		
 	}
 }

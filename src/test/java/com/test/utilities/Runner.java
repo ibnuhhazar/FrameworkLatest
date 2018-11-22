@@ -8,7 +8,7 @@ import cucumber.api.junit.Cucumber;
 @CucumberOptions(
 		plugin = { "json:cucumber.json","html:target//cucumber-pretty" }, 
 		features = { "feature" },
-	    tags = { "@Registration" },
+	    tags = { "@demos" },
 		glue = { "com.test.stepdef", "com.test.utilities" })
 public class Runner {
 	

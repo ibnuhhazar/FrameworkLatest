@@ -66,6 +66,12 @@ public class StepDefinition extends ObjEvent {
 		logger.debug("tap Object " + objectName);
 		tapByXpath(driver, objectName);
 	}
+	
+	@When(".*?click by text.*\"(.*?)\"$")
+	public void tapByTEXT(String objectName) throws InterruptedException {
+		logger.debug("tap Object " + objectName);
+		tapByText(driver, objectName, 100);
+	}
 
 	@When(".*?enter.*? \"(.*?)\" in \"(.*?)\"$")
 	public void setTextbyContentdesc(String text, String objectName) throws InterruptedException {
@@ -115,7 +121,7 @@ public class StepDefinition extends ObjEvent {
 		checkElementByXpath(driver, objectName);
 	}
 
-	@Then(".*? \"([^\"]*)\" .*?display")
+	@Then(".*? \"([^\"]*)\" .*?display by content")
 	public void verifyElementExistByContentdesc(String objectName) {
 		logger.debug("verifyElementExist Object element " + objectName);
 		verifyElementExistByContentDesc(driver, objectName);
@@ -125,6 +131,12 @@ public class StepDefinition extends ObjEvent {
 	public void verifyElementExistById(String objectName) {
 		logger.debug("verifyElementExist Object element " + objectName);
 		verifyElementExistByContentDesc(driver, objectName);
+	}
+	
+	@Then(".*? \"([^\"]*)\" .*?display by text")
+	public void verifyElementExistByTEXT(String objectName) {
+		logger.debug("verifyElementExist Object element " + objectName);
+		verifyElementExistByText(driver, myScenario, objectName, 100);
 	}
 	
 	@Then(".*? \"([^\"]*)\" .*?display by xpath")
@@ -171,14 +183,50 @@ public class StepDefinition extends ObjEvent {
 		verifyEqualByXpath(driver, objectName, text); 
 	}	
 	
+	@Then(".*? \"([^\"]*)\" .*?disable by id")
+	public void verifyElementDisableByID(String objectName) throws IOException {
+		logger.debug("verifyElementDisable Object element " + objectName);
+		verifyElementDisableById(driver, myScenario, objectName, 100);
+	}
+	
 	@When(".*?i enter as otp.*?")
 	public void enterOTP() throws InterruptedException {
 		inputOTP();
 	}
 	
+	@Given(".*?wait for id \"(.*?)\"$")
+	public void waitForID(String objectName) throws InterruptedException {
+		waitForId(driver, 10, objectName, false);
+	}
+	
+	@Given(".*?wait for text \"(.*?)\"$")
+	public void waitForText(String objectName) throws InterruptedException {
+		waitForText(driver, 10, objectName, false);
+	}
+	
+	@Given(".*?wait for index \"(.*?)\"$")
+	public void waitForINDEX(String objectName) throws InterruptedException {
+		waitForIndex(driver, 10, objectName, false);
+	}
+	
+	@Given(".*?wait for content \"(.*?)\"$")
+	public void waitForCONTENT(String objectName) throws InterruptedException {
+		waitForContent(driver, 10, objectName, false);
+	}
+	
 	@Then(".*?screenshot.*?")
 	public void screenShot() {
 		screenShot(driver, myScenario);
+	}
+	
+	@Given(".*?swipe to text \"(.*?)\"$")
+	public void swipeToElementText(String objectName) throws InterruptedException {
+		swipeToEleText(driver, objectName);
+	}
+	
+	@Given(".*?swipe to id \"(.*?)\"$")
+	public void swipeToElementID(String objectName) throws InterruptedException {
+		swipeToEleId(driver, objectName);
 	}
 	
 	@After
@@ -195,6 +243,8 @@ public class StepDefinition extends ObjEvent {
 
 		logger.debug("Quit Session ..............................................." + driver);
 
+		Thread.sleep(5000);
+		
 		driver.quit();
 	}
 }

@@ -124,13 +124,13 @@ public class StepDefinition extends ObjEvent {
 	@Then(".*? \"([^\"]*)\" .*?display by content")
 	public void verifyElementExistByContentdesc(String objectName) {
 		logger.debug("verifyElementExist Object element " + objectName);
-		verifyElementExistByContentDesc(driver, objectName);
+		verifyElementExistByContentDesc(driver, objectName, myScenario);
 	}
 	
 	@Then(".*? \"([^\"]*)\" .*?display by Id")
 	public void verifyElementExistById(String objectName) {
 		logger.debug("verifyElementExist Object element " + objectName);
-		verifyElementExistByContentDesc(driver, objectName);
+		verifyElementExistById(driver, objectName, myScenario);
 	}
 	
 	@Then(".*? \"([^\"]*)\" .*?display by text")
@@ -140,9 +140,15 @@ public class StepDefinition extends ObjEvent {
 	}
 	
 	@Then(".*? \"([^\"]*)\" .*?display by xpath")
-	public void verifyElementExistByXpath(String objectName) {
+	public void verifyElementExistByXPATH(String objectName) {
 		logger.debug("verifyElementExist Object element " + objectName);
-		verifyElementExistByXpath(driver, objectName);
+		verifyElementExistByXpath(driver, objectName, myScenario);
+	}
+	
+	@Then(".*? \"([^\"]*)\" .*?display by toast")
+	public void verifyElementExistByTOAST(String objectName) {
+		logger.debug("verifyElementExist Object element " + objectName);
+		verifyElementExistByToast(driver, objectName, myScenario);
 	}
 	
 	@When(".*?swipe up.*?")

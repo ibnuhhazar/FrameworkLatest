@@ -16,6 +16,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -107,7 +108,7 @@ public class ObjEvent {
 			// Version Android to use UiAutomator2
 			int Versi = Integer.parseInt(capabilitiesRepo.getProperty("1platformVersion"));
 
-			if (Versi >= 7 ) {	
+			if (Versi >= 6 ) {	
 				// Automation for Android 7.0.0 ++
 				desiredCapabilities.setCapability("automationName", "uiautomator2");
 
@@ -256,13 +257,13 @@ public class ObjEvent {
 		logger.debug("Find Element " + driver.findElement(By.name(objectName)));
 		driver.findElement(By.name(objectName)).click();
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public void tapByText(AndroidDriver driver, String objectName, int timeLimitInSeconds) {
 
 		waitForText(driver, timeLimitInSeconds, objectName, false);
-		logger.debug("Find Element " + driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")"));
-		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")").click();
+		logger.debug("Find Element " + driver.findElementByXPath("//*[@text = '" + objectName + "']"));
+		driver.findElementByXPath("//*[@text = '" + objectName + "']").click();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -389,136 +390,161 @@ public class ObjEvent {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void verifyElementExistByContentDesc(AndroidDriver driver, String objectName) {
+	public void verifyElementExistByContentDesc(AndroidDriver driver, String objectName, Scenario myScenario) {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(ByAndroidUIAutomator.AccessibilityId(objectName)));
 
 		// TODO : Find Element by content-desc
 		logger.debug("Find Element "
 				+ driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")"));
-		driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").isDisplayed();
+		boolean content=driver.findElementByAndroidUIAutomator("UiSelector().description(\"" + objectName + "\")").isDisplayed();
+		AssertJUnit.assertEquals(objectName, content);
+		screenShot(driver, myScenario);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void verifyElementExistById(AndroidDriver driver, String objectName) {
+	public void verifyElementExistById(AndroidDriver driver, String objectName, Scenario myScenario) {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(objectName)));
 
 		// TODO : Find Element by ID
 		logger.debug("Find Element " + driver.findElement(By.id(objectName)));
-		driver.findElement(By.id(objectName)).isDisplayed();
+		boolean id=driver.findElement(By.id(objectName)).isDisplayed();
+		AssertJUnit.assertEquals(objectName, id);
+		screenShot(driver, myScenario);
+		
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public void verifyElementExistByText(AndroidDriver driver, Scenario myScenario, String objectName, int timeLimitInSeconds) {
 
 		waitForText(driver, timeLimitInSeconds, objectName, false);
 		logger.debug("Find Element " + driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")"));
-		driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")").isDisplayed();
+		boolean text = driver.findElementByAndroidUIAutomator("UiSelector().text(\"" + objectName + "\")").isDisplayed();
+		AssertJUnit.assertEquals(objectName, text);
 		screenShot(driver, myScenario);
 
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public void verifyElementDisableById(AndroidDriver driver, Scenario myScenario, String objectName, int timeLimitInSeconds) throws IOException {
 		waitForContent(driver, timeLimitInSeconds, objectName, false);
 		logger.debug("Find Element " + driver.findElement(By.id(objectName)));
 		boolean button=driver.findElement(By.id(objectName)).isEnabled();
 		AssertJUnit.assertEquals(false, button);
+		
+		screenShot(driver, myScenario);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void verifyElementExistByXpath(AndroidDriver driver, String objectName) {
+	public void verifyElementExistByToast(AndroidDriver driver, String objectName, Scenario myScenario) {
+
+		// TODO : Verify element toast
+		logger.debug("Find Element " + driver.findElementByXPath("//android.widget.Toast[1]"));
+		WebElement toastView = driver.findElement(By.xpath("//android.widget.Toast[1]"));
+
+		AssertJUnit.assertEquals(objectName, toastView.getAttribute("name"));
+
+		screenShot(driver, myScenario);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void verifyElementExistByXpath(AndroidDriver driver, String objectName, Scenario myScenario) {
 		// TODO : Find Element by Xpath
+		logger.debug("Find Element " + driver.findElementByXPath("//*[@class = 'android.widget.*?' and @text = '" + objectName + "']"));
+		boolean xpath = driver.findElement(By.xpath("//*[@class='android.widget.*?' and @text='" + objectName +"']")).isDisplayed();
+		AssertJUnit.assertEquals(objectName, xpath);
+		
+		screenShot(driver, myScenario);
 	}
 
 	// Swipe Up
-		@SuppressWarnings("rawtypes")
-		public static void swipeDown(AndroidDriver driver) {
-			Dimension size;
-			int start = 0;
-			int end = 0;
-			int anchor = 0;
-			int timeduration = 2;
+	@SuppressWarnings("rawtypes")
+	public static void swipeDown(AndroidDriver driver) {
+		Dimension size;
+		int start = 0;
+		int end = 0;
+		int anchor = 0;
+		int timeduration = 2;
 
-			size = driver.manage().window().getSize();
-			end = (int) (size.height * 0.80);
-			start = (int) (size.height * 0.20);
-			anchor = size.width / 2;
+		size = driver.manage().window().getSize();
+		end = (int) (size.height * 0.80);
+		start = (int) (size.height * 0.20);
+		anchor = size.width / 2;
 
-			new TouchAction(driver)
-			.press(PointOption.point(anchor, start))
-			.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
-			.moveTo(PointOption.point(anchor, end))
-			.release().perform();
+		new TouchAction(driver)
+		.press(PointOption.point(anchor, start))
+		.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
+		.moveTo(PointOption.point(anchor, end))
+		.release().perform();
 
-		}
+	}
 
-		// Swipe Down
-		@SuppressWarnings("rawtypes")
-		public void swipeUp(AndroidDriver driver) {
-			Dimension size;
-			int start = 0;
-			int end = 0;
-			int anchor = 0;
-			int timeduration = 2;
+	// Swipe Down
+	@SuppressWarnings("rawtypes")
+	public void swipeUp(AndroidDriver driver) {
+		Dimension size;
+		int start = 0;
+		int end = 0;
+		int anchor = 0;
+		int timeduration = 2;
 
-			size = driver.manage().window().getSize();
-			System.out.println(size);
-			end = (int) (size.height * 0.20);
-			start = (int) (size.height * 0.80);
-			anchor = size.width / 2;
+		size = driver.manage().window().getSize();
+		System.out.println(size);
+		end = (int) (size.height * 0.20);
+		start = (int) (size.height * 0.80);
+		anchor = size.width / 2;
 
-			new TouchAction(driver)
-			.press(PointOption.point(anchor, start))
-			.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
-			.moveTo(PointOption.point(anchor, end))
-			.release().perform();
-		}
+		new TouchAction(driver)
+		.press(PointOption.point(anchor, start))
+		.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
+		.moveTo(PointOption.point(anchor, end))
+		.release().perform();
+	}
 
-		// Swipe Right
-		@SuppressWarnings("rawtypes")
-		public void swipeLeft(AndroidDriver driver) {
-			Dimension size;
-			int anchor = 0;
-			int end = 0;
-			int start = 0;
-			int timeduration = 2;
+	// Swipe Right
+	@SuppressWarnings("rawtypes")
+	public void swipeLeft(AndroidDriver driver) {
+		Dimension size;
+		int anchor = 0;
+		int end = 0;
+		int start = 0;
+		int timeduration = 2;
 
-			size = driver.manage().window().getSize();
-			System.out.println(size);
-			start = (int) (size.width * 0.80);
-			end = (int) (size.width * 0.20);
-			anchor = size.height / 2;
+		size = driver.manage().window().getSize();
+		System.out.println(size);
+		start = (int) (size.width * 0.80);
+		end = (int) (size.width * 0.20);
+		anchor = size.height / 2;
 
-			new TouchAction(driver)
-			.press(PointOption.point(start, anchor))
-			.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
-			.moveTo(PointOption.point(end, anchor))
-			.release().perform();
-		}
+		new TouchAction(driver)
+		.press(PointOption.point(start, anchor))
+		.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
+		.moveTo(PointOption.point(end, anchor))
+		.release().perform();
+	}
 
-		// Swipe Left
-		@SuppressWarnings("rawtypes")
-		public void swipeRight(AndroidDriver driver) {
-			Dimension size;
-			int anchor = 0;
-			int end = 0;
-			int start = 0;
-			int timeduration = 2;
+	// Swipe Left
+	@SuppressWarnings("rawtypes")
+	public void swipeRight(AndroidDriver driver) {
+		Dimension size;
+		int anchor = 0;
+		int end = 0;
+		int start = 0;
+		int timeduration = 2;
 
-			size = driver.manage().window().getSize();
-			System.out.println(size);
-			start = (int) (size.width * 0.20);
-			end = (int) (size.width * 0.80);
-			anchor = size.height / 2;
+		size = driver.manage().window().getSize();
+		System.out.println(size);
+		start = (int) (size.width * 0.20);
+		end = (int) (size.width * 0.80);
+		anchor = size.height / 2;
 
-			new TouchAction(driver)
-			.press(PointOption.point(start, anchor))
-			.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
-			.moveTo(PointOption.point(end, anchor))
-			.release().perform();
-		}
+		new TouchAction(driver)
+		.press(PointOption.point(start, anchor))
+		.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeduration)))
+		.moveTo(PointOption.point(end, anchor))
+		.release().perform();
+	}
 
 	public void inputOTP() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
